@@ -100,7 +100,7 @@ function renderWheel(){
   lettersLayerEl.innerHTML = '';
   const N = LETTERS.length;
   const center = { x: 50, y: 50 };
-  const radius = 38;
+  const radius = 35;
   const startAngleDeg = -90;
 
   LETTERS.forEach((letter, i) => {
