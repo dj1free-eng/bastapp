@@ -1,0 +1,2 @@
+# bastapp
+Juego tipo Basta
