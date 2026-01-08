@@ -100,14 +100,16 @@ input:focus{border-color:#a78bfa;}
 .lettersLayer{ position:absolute; inset:0; }
 .letterBtn{
   position:absolute;
-  width:48px; height:58px;
-  border-radius:12px;
+  width:44px;
+  height:56px;
+  border-radius:14px;
   border:0;
-  background:white;
+  background:rgba(255,255,255,.92);
   font-weight:1000;
   font-size:20px;
-  box-shadow:0 10px 25px rgba(0,0,0,.18);
+  box-shadow:0 8px 18px rgba(0,0,0,.14);
   transform:translate(-50%,-50%);
+  backdrop-filter: blur(2px);
 }
 .letterBtn:active{transform:translate(-50%,-50%) scale(.96);}
 .letterBtn.disabled{
