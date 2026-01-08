@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BASTA Bomba</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="app">
+    <!-- SETUP -->
+    <section id="setup" class="card">
+      <header class="titleRow">
+        <div class="logo">💣</div>
+        <h1>BASTA BOMBA</h1>
+      </header>
+
+      <h2>Jugadores</h2>
+      <div id="playersList" class="playersList"></div>
+
+      <div class="row">
+        <input id="playerInput" type="text" placeholder="Nombre del jugador" maxlength="20">
+        <button id="addPlayerBtn" class="btn primary">Añadir</button>
+      </div>
+
+      <div class="row">
+        <button id="startBtn" class="btn primary big">Empezar</button>
+      </div>
+
+      <p class="hint">Regla: por turnos tienes 10s para decir una palabra válida que encaje con la tarjeta y empiece por una letra disponible. Si fallas: BOOM.</p>
+    </section>
+
+    <!-- GAME -->
+    <section id="game" class="hidden">
+      <div class="card questionCard">
+        <div class="question" id="questionText">Partes del cuerpo humano</div>
+        <div class="sub" id="turnText">Turno de: Jugador 1</div>
+      </div>
+
+      <div class="bombWrap">
+        <div class="bomb" id="bomb">
+          <div class="bombIcon">💣</div>
+          <div class="time" id="timeText">10</div>
+          <div class="seconds">segundos</div>
+        </div>
+      </div>
+
+      <div class="wheelWrap">
+        <img class="wheel" src="wheel.png" alt="Rueda" draggable="false">
+        <div id="lettersLayer" class="lettersLayer" aria-label="Letras"></div>
+      </div>
+
+      <div class="card playersCard">
+        <div id="chips" class="chips"></div>
+      </div>
+
+      <div class="controls">
+        <button id="newQuestionBtn" class="btn">Nueva pregunta</button>
+        <button id="changePlayersBtn" class="btn">Cambiar jugadores</button>
+        <button id="continueBtn" class="btn danger hidden">Seguir (misma pregunta)</button>
+      </div>
+
+      <div id="overlay" class="overlay hidden">💥</div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
