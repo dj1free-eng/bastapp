@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "language": "es-ES",
+  "timeLimitSeconds": 10,
+  "categories": [
+    { "id": "cuerpo", "title": "Partes del cuerpo humano" },
+    { "id": "paises", "title": "Países" },
+    { "id": "ciudades", "title": "Ciudades" },
+    { "id": "animales", "title": "Animales" },
+    { "id": "comidas", "title": "Comidas" },
+    { "id": "frutas", "title": "Frutas" },
+    { "id": "verduras", "title": "Verduras" },
+    { "id": "bebidas", "title": "Bebidas" },
+    { "id": "deportes", "title": "Deportes" },
+    { "id": "profesiones", "title": "Profesiones" },
+    { "id": "marcas", "title": "Marcas" },
+    { "id": "peliculas", "title": "Películas" },
+    { "id": "series", "title": "Series" },
+    { "id": "instrumentos", "title": "Instrumentos musicales" },
+    { "id": "ropa", "title": "Cosas que te pones (ropa/accesorios)" },
+    { "id": "casa", "title": "Cosas de una casa" },
+    { "id": "coche", "title": "Cosas de un coche" },
+    { "id": "cole", "title": "Objetos del colegio" },
+    { "id": "videojuegos", "title": "Videojuegos" },
+    { "id": "famosos", "title": "Personajes famosos" }
+  ]
+}
