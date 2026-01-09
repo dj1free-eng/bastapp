@@ -98,6 +98,9 @@ function renderBomb(){
   bombEl.classList.toggle('exploding', gameState === 'exploded');
   overlayEl.classList.toggle('hidden', gameState !== 'exploded');
   continueBtn.classList.toggle('hidden', gameState !== 'exploded');
+
+  // Botón central visible solo al inicio de la ronda
+  centerBtn.classList.toggle('hidden', gameState !== 'ready');
 }
 
 function renderWheel(){
@@ -189,14 +192,16 @@ function startNewRound(){
   disabled = new Set();
   currentPlayerIndex = 0;
   timer = TURN_SECONDS;
-  gameState = 'playing';
+
+  gameState = 'ready';   // <-- ronda armada, aún sin contar
 
   setScreen('game');
   renderHeader();
   renderBomb();
   renderWheel();
   renderChips();
-  startTimer();
+
+  stopTimer();           // <-- importantísimo: no contar todavía
 }
 function continueSameQuestion(){
   if(!question) question = rand(QUESTIONS);
