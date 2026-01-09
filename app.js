@@ -21,7 +21,8 @@ const playersListEl = document.getElementById('playersList');
 const playerInputEl = document.getElementById('playerInput');
 const addPlayerBtn = document.getElementById('addPlayerBtn');
 const startBtn = document.getElementById('startBtn');
-
+const flipInner = document.getElementById('flipInner');
+const frontTextEl = document.getElementById('frontText');
 const questionTextEl = document.getElementById('questionText');
 const turnTextEl = document.getElementById('turnText');
 
@@ -87,9 +88,21 @@ function renderHeader(){
   if (gameState === 'exploded') {
     turnTextEl.textContent = '¡BOOOM! Fin de ronda';
   } else if (gameState === 'ready') {
-    turnTextEl.textContent = `Turno de: ${players[currentPlayerIndex]} — pulsa el centro para empezar`;
+    turnTextEl.textContent = `Turno de: ${players[currentPlayerIndex]}`;
   } else {
     turnTextEl.textContent = `Turno de: ${players[currentPlayerIndex]}`;
+  }
+
+  // Giro de la carta
+  if (flipInner){
+    flipInner.classList.toggle(
+      'isFlipped',
+      gameState === 'playing' || gameState === 'exploded'
+    );
+  }
+
+  if (frontTextEl){
+    frontTextEl.textContent = 'Pulsa el botón central para iniciar el juego';
   }
 }
 function renderBomb(){
