@@ -101,7 +101,7 @@ function renderWheel(){
   const N = LETTERS.length;
   const center = { x: 50, y: 50 };
   const radius = 38;
-  const rot = angleDeg - 90; // ahora miran hacia fuera
+  const rot = angleDeg - 90;
 
 LETTERS.forEach((letter, i) => {
   const angleDeg = startAngleDeg + (360 * i) / N;     // ángulo en grados (para rotación)
