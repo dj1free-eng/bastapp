@@ -384,32 +384,12 @@ function onLetter(letter){
   nextTurn();
 }
 
-function startNewRound(){
-   if(!questionsLoaded){
-  console.warn('Preguntas aún no cargadas');
-  return;
+let q = rand(QUESTIONS);
+if (QUESTIONS.length > 1) {
+  while (q === lastQuestion) q = rand(QUESTIONS);
 }
-  if(!QUESTIONS || QUESTIONS.length === 0){
-    QUESTIONS = ['Partes del cuerpo humano'];
-  }
-
-  question = rand(QUESTIONS);
-  disabled = new Set();
-  currentPlayerIndex = 0;
-  timer = TURN_SECONDS;
-
-  gameState = 'ready'; // ronda armada, aún sin contar
-stopSound(sounds.tick);
-  setScreen('game');
-  renderHeader();
-  renderBomb();
-  renderWheel();
-  renderChips();
-stopLoop(sounds.tick);
-  stopTimer();
-  setCardFlipped(false);
-}
-
+question = q;
+lastQuestion = q;
 function continueSameQuestion(){
   if(!question){
     question = (QUESTIONS && QUESTIONS.length) ? rand(QUESTIONS) : 'Partes del cuerpo humano';
