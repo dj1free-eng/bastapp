@@ -83,11 +83,15 @@ function renderChips(){
 
 function renderHeader(){
   questionTextEl.textContent = question;
-  turnTextEl.textContent = (gameState === 'exploded')
-    ? '¡BOOOM! Fin de ronda'
-    : `Turno de: ${players[currentPlayerIndex]}`;
-}
 
+  if (gameState === 'exploded') {
+    turnTextEl.textContent = '¡BOOOM! Fin de ronda';
+  } else if (gameState === 'ready') {
+    turnTextEl.textContent = `Turno de: ${players[currentPlayerIndex]} — pulsa el centro para empezar`;
+  } else {
+    turnTextEl.textContent = `Turno de: ${players[currentPlayerIndex]}`;
+  }
+}
 function renderBomb(){
   timeTextEl.textContent = (gameState === 'exploded') ? '💥' : String(timer);
   bombEl.classList.toggle('low', gameState === 'playing' && timer <= 3);
