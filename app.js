@@ -18,6 +18,7 @@ let question = '';
 let timer = TURN_SECONDS;
 let disabled = new Set();
 let tickHandle = null;
+let audioUnlocked = false;
 // =====================
 // 🔊 SONIDOS
 // =====================
@@ -51,6 +52,42 @@ function stopSound(s){
   if(!s) return;
   s.pause();
   s.currentTime = 0;
+}
+function unlockAudioOnce(){
+  if (audioUnlocked) return;
+  audioUnlocked = true;
+
+  // Desbloqueo silencioso en iOS/Safari:
+  // reproducimos y pausamos cada audio con muted=true para que no suene nada.
+  Object.values(sounds).forEach(a => {
+    const prevMuted = a.muted;
+    const prevVol = a.volume;
+
+    a.muted = true;
+    a.volume = 0;
+    a.currentTime = 0;
+
+    const p = a.play();
+    if (p && typeof p.then === 'function') {
+      p.then(() => {
+        a.pause();
+        a.currentTime = 0;
+        a.muted = prevMuted;
+        a.volume = prevVol;
+      }).catch(() => {
+        a.muted = prevMuted;
+        a.volume = prevVol;
+      });
+    } else {
+      // fallback
+      try {
+        a.pause();
+        a.currentTime = 0;
+      } catch(_) {}
+      a.muted = prevMuted;
+      a.volume = prevVol;
+    }
+  });
 }
 /* ===== DOM ===== */
 const setupEl = document.getElementById('setup');
@@ -257,7 +294,7 @@ function stopTimer(){
 
 function startTimer(){
   stopTimer();
-
+  stopSound(sounds.tick);   // <-- esto evita solapes
   playSound(sounds.tick);
 
   tickHandle = setInterval(() => {
@@ -272,6 +309,7 @@ function startTimer(){
     if(timer <= 0){
       timer = 0;
       explode();
+      return;
     }
 
     renderBomb();
@@ -404,15 +442,13 @@ continueBtn.addEventListener('click', resumeSameState);
 centerBtn.addEventListener('click', () => {
   if (gameState !== 'ready') return;
 
-  // 🔓 Activar audio en iOS (primer gesto del usuario)
-  Object.values(sounds).forEach(s => {
-    s.play().then(() => s.pause()).catch(()=>{});
-  });
+  // 🔇 Desbloquea audio sin que suene nada
+  unlockAudioOnce();
 
+  // Ahora sí: sonido real de inicio
   playSound(sounds.start);
 
   gameState = 'playing';
-
   setCardFlipped(true);
 
   renderHeader();
@@ -422,7 +458,6 @@ centerBtn.addEventListener('click', () => {
 
   startTimer();
 });
-
 /* ===== Init ===== */
 renderPlayersSetup();
 setScreen('setup');
