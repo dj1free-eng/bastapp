@@ -101,7 +101,7 @@ function renderWheel(){
 
   const N = LETTERS.length;      // 20
   const center = { x: 50, y: 50 };
-  const radius = 32;             // ajustado a tu PNG
+  const radius = 33;             // ajustado a tu PNG
   const startAngleDeg = -90;     // primera tecla arriba
 
   LETTERS.forEach((letter, i) => {
