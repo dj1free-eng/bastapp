@@ -1,27 +1,32 @@
 /* =========================
-   BASTA BOMBA — app.js (COMPLETO)
+   BASTA BOMBA — app.js (COMPLETO CORREGIDO)
    - Preguntas desde JSON: ./data/questions.json
    - Ronda armada (ready): no corre tiempo hasta pulsar botón central
    - Carta superior flip (Safari-safe)
    - Letras en rueda (20) con rotación por tecla
+   - Sonidos WAV
 ========================= */
 
 const LETTERS = ['A','B','C','D','E','F','G','H','I','J','L','M','N','O','P','R','S','T','U','V'];
-let questionsLoaded = false;
-let TURN_SECONDS = 10;            // se puede sobrescribir desde JSON
-let QUESTIONS = [];               // se carga desde JSON
-let gameState = 'setup';          // setup | ready | playing | exploded
 
+let questionsLoaded = false;
+let TURN_SECONDS = 10;
+let QUESTIONS = [];
+let lastQuestion = '';
+
+let gameState = 'setup';          // setup | ready | playing | exploded
 let players = ['Jugador 1', 'Jugador 2'];
 let currentPlayerIndex = 0;
 let question = '';
 let timer = TURN_SECONDS;
 let disabled = new Set();
 let tickHandle = null;
+
+/* =====================
+   🔊 SONIDOS
+===================== */
 let audioUnlocked = false;
-// =====================
-// 🔊 SONIDOS
-// =====================
+
 const sounds = {
   start: new Audio('assets/sounds/start-round.wav'),
   tick: new Audio('assets/sounds/tick.wav'),
@@ -31,7 +36,6 @@ const sounds = {
   lose: new Audio('assets/sounds/lose.wav')
 };
 
-// Configuración inicial
 sounds.tick.loop = true;
 sounds.tick.volume = 0.25;
 
@@ -41,36 +45,33 @@ sounds.start.volume = 0.6;
 sounds.letter.volume = 0.5;
 sounds.lose.volume = 0.6;
 
-// Utilidades
-function playSound(s){
-  if(!s) return;
-  s.currentTime = 0;
-  s.play().catch(()=>{});
+function playSound(a){
+  if(!a) return;
+  a.currentTime = 0;
+  a.play().catch(()=>{});
 }
-
-function stopSound(s){
-  if(!s) return;
-  s.pause();
-  s.currentTime = 0;
+function stopSound(a){
+  if(!a) return;
+  a.pause();
+  a.currentTime = 0;
 }
 function playLoop(a){
   if(!a) return;
   a.loop = true;
   a.currentTime = 0;
-  a.play().catch(err => console.warn('tick play blocked/error:', err));
+  a.play().catch(err => console.warn('loop play error:', err));
 }
-
 function stopLoop(a){
   if(!a) return;
   a.pause();
   a.currentTime = 0;
 }
+
+// Desbloqueo silencioso iOS/Safari
 function unlockAudioOnce(){
   if (audioUnlocked) return;
   audioUnlocked = true;
 
-  // Desbloqueo silencioso en iOS/Safari:
-  // reproducimos y pausamos cada audio con muted=true para que no suene nada.
   Object.values(sounds).forEach(a => {
     const prevMuted = a.muted;
     const prevVol = a.volume;
@@ -91,16 +92,13 @@ function unlockAudioOnce(){
         a.volume = prevVol;
       });
     } else {
-      // fallback
-      try {
-        a.pause();
-        a.currentTime = 0;
-      } catch(_) {}
+      try { a.pause(); a.currentTime = 0; } catch(_) {}
       a.muted = prevMuted;
       a.volume = prevVol;
     }
   });
 }
+
 /* ===== DOM ===== */
 const setupEl = document.getElementById('setup');
 const gameEl = document.getElementById('game');
@@ -149,12 +147,13 @@ async function loadQuestions(){
   try{
     const url = './data/questions.json';
     const res = await fetch(url, { cache: 'no-store' });
-
-    if(!res.ok){
-      throw new Error(`HTTP ${res.status} al cargar ${url}`);
-    }
+    if(!res.ok) throw new Error(`HTTP ${res.status} al cargar ${url}`);
 
     const data = await res.json();
+
+    if (typeof data.timeLimitSeconds === 'number' && data.timeLimitSeconds > 0) {
+      TURN_SECONDS = data.timeLimitSeconds;
+    }
 
     const cats = Array.isArray(data.categories) ? data.categories : [];
     const titles = cats.map(c => c && c.title).filter(Boolean);
@@ -162,16 +161,18 @@ async function loadQuestions(){
     QUESTIONS = titles.length ? titles : fallback;
     questionsLoaded = true;
 
-    console.log('✅ Preguntas cargadas:', QUESTIONS.length, QUESTIONS);
+    console.log('✅ Preguntas cargadas:', QUESTIONS.length);
 
   } catch (err){
     console.error('❌ Error cargando preguntas:', err);
     QUESTIONS = fallback;
     questionsLoaded = true;
-
-    console.log('⚠️ Usando fallback:', QUESTIONS);
   }
+
+  // sincroniza timer con TURN_SECONDS
+  timer = TURN_SECONDS;
 }
+
 /* ===== Carta (flip Safari-safe) ===== */
 function setCardFlipped(flipped){
   if(!flipInner) return;
@@ -181,9 +182,8 @@ function setCardFlipped(flipped){
     return;
   }
 
-  // Safari iOS: forzar transición
   flipInner.classList.remove('isFlipped');
-  void flipInner.offsetWidth; // reflow
+  void flipInner.offsetWidth;
   requestAnimationFrame(() => {
     flipInner.classList.add('isFlipped');
   });
@@ -224,14 +224,12 @@ function renderChips(){
 }
 
 function renderHeader(){
-  // TEXTO PRINCIPAL
   if (gameState === 'exploded') {
     const loser = players[currentPlayerIndex];
     questionTextEl.textContent = `💥 Ha perdido ${loser}`;
     turnTextEl.textContent = 'Fin de la ronda';
   } else {
     questionTextEl.textContent = question;
-
     if (gameState === 'ready') {
       turnTextEl.textContent = `Turno de: ${players[currentPlayerIndex]} — listo`;
     } else {
@@ -239,12 +237,10 @@ function renderHeader(){
     }
   }
 
-  // Texto frontal (instrucciones)
   if(frontTextEl){
     frontTextEl.textContent = 'Pulsa el botón central para iniciar el juego';
   }
 
-  // Giro de la carta
   setCardFlipped(gameState === 'playing' || gameState === 'exploded');
 }
 
@@ -257,17 +253,16 @@ function renderBomb(){
   overlayEl.classList.toggle('hidden', gameState !== 'exploded');
   continueBtn.classList.toggle('hidden', gameState !== 'exploded');
 
-  // Botón central visible SOLO cuando está armado
   centerBtn.classList.toggle('hidden', gameState !== 'ready');
 }
 
 function renderWheel(){
   lettersLayerEl.innerHTML = '';
 
-  const N = LETTERS.length;       // 20
+  const N = LETTERS.length;
   const center = { x: 50, y: 50 };
-  const radius = 37;              // ajustado a tu PNG (cámbialo si retocas CSS)
-  const startAngleDeg = -90;      // primera tecla arriba
+  const radius = 37;
+  const startAngleDeg = -90;
 
   LETTERS.forEach((letter, i) => {
     const angleDeg = startAngleDeg + (360 * i) / N;
@@ -281,7 +276,6 @@ function renderWheel(){
     btn.style.left = `${x}%`;
     btn.style.top = `${y}%`;
 
-    // Rotación: leer desde fuera
     const rot = angleDeg - 90;
     btn.style.setProperty('--rot', `${rot}deg`);
 
@@ -290,10 +284,9 @@ function renderWheel(){
     const isDisabled = disabled.has(letter);
     if (isDisabled) btn.classList.add('disabled');
 
-    // Deshabilitar si ya explotó
     btn.disabled = isDisabled || gameState === 'exploded';
-
     btn.addEventListener('click', () => onLetter(letter));
+
     lettersLayerEl.appendChild(btn);
   });
 }
@@ -315,9 +308,10 @@ function startTimer(){
 
     timer -= 1;
 
+    // warning SOLO cuando llega a 3
     if(timer === 3){
-  playSound(sounds.warning);
-}
+      playSound(sounds.warning);
+    }
 
     if(timer <= 0){
       timer = 0;
@@ -334,8 +328,8 @@ function explode(){
   gameState = 'exploded';
 
   stopTimer();
-  stopSound(sounds.tick);
-stopLoop(sounds.tick);
+  stopLoop(sounds.tick);
+
   playSound(sounds.explosion);
   setTimeout(() => playSound(sounds.lose), 400);
 
@@ -344,12 +338,11 @@ stopLoop(sounds.tick);
   renderWheel();
   renderChips();
 }
+
+// Reanudar en el mismo estado (mismo jugador, letras, pregunta)
 function resumeSameState(){
-  // Solo tiene sentido si la ronda estaba en curso y se pausó por “explosión” accidental
   if(gameState !== 'exploded') return;
 
-  // Volvemos a jugar SIN tocar nada del estado actual
-  // (misma pregunta, mismas letras usadas, mismo jugador)
   gameState = 'playing';
   timer = TURN_SECONDS;
 
@@ -360,6 +353,7 @@ function resumeSameState(){
 
   startTimer();
 }
+
 function nextTurn(){
   currentPlayerIndex = (currentPlayerIndex + 1) % players.length;
   timer = TURN_SECONDS;
@@ -384,26 +378,43 @@ function onLetter(letter){
   nextTurn();
 }
 
-let q = rand(QUESTIONS);
-if (QUESTIONS.length > 1) {
-  while (q === lastQuestion) q = rand(QUESTIONS);
+// Elegir pregunta sin repetir la anterior (si hay más de 1)
+function pickQuestion(){
+  if(!QUESTIONS || QUESTIONS.length === 0) return 'Partes del cuerpo humano';
+
+  if(QUESTIONS.length === 1) return QUESTIONS[0];
+
+  let q = rand(QUESTIONS);
+  while(q === lastQuestion){
+    q = rand(QUESTIONS);
+  }
+  lastQuestion = q;
+  return q;
 }
-question = q;
-lastQuestion = q;
-function continueSameQuestion(){
-  if(!question){
-    question = (QUESTIONS && QUESTIONS.length) ? rand(QUESTIONS) : 'Partes del cuerpo humano';
+
+function startNewRound(){
+  if(!questionsLoaded){
+    console.warn('Preguntas aún no cargadas');
+    return;
   }
 
-  gameState = 'playing';
+  question = pickQuestion();
+  disabled = new Set();
+  currentPlayerIndex = 0;
   timer = TURN_SECONDS;
 
+  gameState = 'ready';
+
+  stopTimer();
+  stopLoop(sounds.tick);
+
+  setScreen('game');
   renderHeader();
   renderBomb();
   renderWheel();
   renderChips();
 
-  startTimer();
+  setCardFlipped(false);
 }
 
 /* ===== Events ===== */
@@ -421,28 +432,23 @@ playerInputEl.addEventListener('keydown', (e) => {
   if(e.key === 'Enter') addPlayerBtn.click();
 });
 
-// Botón START (desde setup)
 startBtn.addEventListener('click', startNewRound);
-
-// Nueva pregunta (misma mecánica: queda ready)
 newQuestionBtn.addEventListener('click', startNewRound);
 
-// Cambiar jugadores
 changePlayersBtn.addEventListener('click', () => {
   stopTimer();
+  stopLoop(sounds.tick);
   gameState = 'setup';
   setScreen('setup');
   renderPlayersSetup();
 });
+
 continueBtn.addEventListener('click', resumeSameState);
-// Botón central: iniciar (flip + timer)
+
 centerBtn.addEventListener('click', () => {
   if (gameState !== 'ready') return;
 
-  // 🔇 Desbloquea audio sin que suene nada
   unlockAudioOnce();
-
-  // Ahora sí: sonido real de inicio
   playSound(sounds.start);
 
   gameState = 'playing';
@@ -455,11 +461,11 @@ centerBtn.addEventListener('click', () => {
 
   startTimer();
 });
+
 /* ===== Init ===== */
 renderPlayersSetup();
 setScreen('setup');
 
-// Bloquea START hasta cargar
 startBtn.disabled = true;
 newQuestionBtn.disabled = true;
 
