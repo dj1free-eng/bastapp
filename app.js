@@ -101,18 +101,25 @@ function renderWheel(){
   const N = LETTERS.length;
   const center = { x: 50, y: 50 };
   const radius = 38;
-  const startAngleDeg = -90;
+const startAngleDeg = -90;
 
-  LETTERS.forEach((letter, i) => {
-    const ang = (startAngleDeg + (360 * i) / N) * (Math.PI / 180);
-    const x = center.x + radius * Math.cos(ang);
-    const y = center.y + radius * Math.sin(ang);
+LETTERS.forEach((letter, i) => {
+  const angleDeg = startAngleDeg + (360 * i) / N;     // ángulo en grados (para rotación)
+  const ang = angleDeg * (Math.PI / 180);             // ángulo en radianes (para cos/sin)
 
-    const btn = document.createElement('button');
-    btn.className = 'letterBtn';
-    btn.style.left = `${x}%`;
-    btn.style.top = `${y}%`;
-    btn.textContent = letter;
+  const x = center.x + radius * Math.cos(ang);
+  const y = center.y + radius * Math.sin(ang);
+
+  const btn = document.createElement('button');
+  btn.className = 'letterBtn';
+  btn.style.left = `${x}%`;
+  btn.style.top = `${y}%`;
+
+  // Rotación por tecla: radial hacia fuera
+  const rot = angleDeg + 90;
+  btn.style.transform = `translate(-50%, -50%) rotate(${rot}deg)`;
+
+  btn.textContent = letter;
 
     const isDisabled = disabled.has(letter);
     if(isDisabled) btn.classList.add('disabled');
