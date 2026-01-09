@@ -108,7 +108,7 @@ input:focus{border-color:#a78bfa;}
   font-weight:1000;
   font-size:20px;
   box-shadow:0 8px 18px rgba(0,0,0,.14);
-  transform:translate(-50%,-50%);
+/*  transform:translate(-50%,-50%);*/
 }
 .letterBtn:active{transform:translate(-50%,-50%) scale(.96);}
 .letterBtn.disabled{
