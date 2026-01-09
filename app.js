@@ -391,6 +391,13 @@ continueBtn.addEventListener('click', resumeSameState);
 centerBtn.addEventListener('click', () => {
   if (gameState !== 'ready') return;
 
+  // 🔓 Activar audio en iOS (primer gesto del usuario)
+  Object.values(sounds).forEach(s => {
+    s.play().then(() => s.pause()).catch(()=>{});
+  });
+
+  playSound(sounds.start);
+
   gameState = 'playing';
 
   setCardFlipped(true);
