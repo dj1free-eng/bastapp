@@ -257,15 +257,21 @@ function stopTimer(){
 
 function startTimer(){
   stopTimer();
+
+  playSound(sounds.tick);
+
   tickHandle = setInterval(() => {
     if(gameState !== 'playing') return;
 
     timer -= 1;
 
+    if(timer <= 3 && timer > 0){
+      playSound(sounds.warning);
+    }
+
     if(timer <= 0){
       timer = 0;
       explode();
-      return;
     }
 
     renderBomb();
@@ -275,7 +281,13 @@ function startTimer(){
 /* ===== Game logic ===== */
 function explode(){
   gameState = 'exploded';
+
   stopTimer();
+  stopSound(sounds.tick);
+
+  playSound(sounds.explosion);
+  setTimeout(() => playSound(sounds.lose), 400);
+
   renderHeader();
   renderBomb();
   renderWheel();
@@ -309,9 +321,10 @@ function onLetter(letter){
   if(gameState !== 'playing') return;
   if(disabled.has(letter)) return;
 
+  playSound(sounds.letter);
+
   disabled.add(letter);
 
-  // Si se gastan todas, reset de letras (misma pregunta)
   if(disabled.size === LETTERS.length){
     disabled = new Set();
   }
@@ -331,7 +344,7 @@ function startNewRound(){
   timer = TURN_SECONDS;
 
   gameState = 'ready'; // ronda armada, aún sin contar
-
+stopSound(sounds.tick);
   setScreen('game');
   renderHeader();
   renderBomb();
