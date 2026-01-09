@@ -38,7 +38,28 @@ const changePlayersBtn = document.getElementById('changePlayersBtn');
 const continueBtn = document.getElementById('continueBtn');
 
 function rand(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+async function loadQuestions(){
+  try{
+    const res = await fetch('./data/questions.json', { cache: 'no-store' });
+    if(!res.ok) throw new Error('No se pudo cargar questions.json');
+    const data = await res.json();
 
+    // Si existe timeLimitSeconds en el JSON, lo usamos
+    if (typeof data.timeLimitSeconds === 'number' && data.timeLimitSeconds > 0) {
+      // Si quieres que el tiempo venga del JSON:
+      // TURN_SECONDS = data.timeLimitSeconds;  // (TURN_SECONDS ahora es const, si quieres lo cambiamos a let)
+    }
+
+    QUESTIONS = (data.categories || []).map(c => c.title).filter(Boolean);
+
+    if(QUESTIONS.length === 0){
+      QUESTIONS = ['Partes del cuerpo humano']; // fallback
+    }
+  }catch(err){
+    console.error(err);
+    QUESTIONS = ['Partes del cuerpo humano']; // fallback
+  }
+}
 function setScreen(which){
   setupEl.classList.toggle('hidden', which !== 'setup');
   gameEl.classList.toggle('hidden', which !== 'game');
@@ -244,7 +265,9 @@ addPlayerBtn.addEventListener('click', () => {
   if(players.length >= 8) return;
   players.push(name);
   playerInputEl.value = '';
-  renderPlayersSetup();
+renderPlayersSetup();
+setScreen('setup');
+loadQuestions();
 });
 playerInputEl.addEventListener('keydown', (e) => {
   if(e.key === 'Enter') addPlayerBtn.click();
