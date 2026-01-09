@@ -16,7 +16,7 @@ let tickHandle = null;
 
 const setupEl = document.getElementById('setup');
 const gameEl = document.getElementById('game');
-
+const centerBtn = document.getElementById('centerBtn');
 const playersListEl = document.getElementById('playersList');
 const playerInputEl = document.getElementById('playerInput');
 const addPlayerBtn = document.getElementById('addPlayerBtn');
