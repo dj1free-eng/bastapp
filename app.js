@@ -18,7 +18,40 @@ let question = '';
 let timer = TURN_SECONDS;
 let disabled = new Set();
 let tickHandle = null;
+// =====================
+// 🔊 SONIDOS
+// =====================
+const sounds = {
+  start: new Audio('assets/sounds/start-round.wav'),
+  tick: new Audio('assets/sounds/tick.wav'),
+  warning: new Audio('assets/sounds/warning-beep.wav'),
+  explosion: new Audio('assets/sounds/explosion.wav'),
+  letter: new Audio('assets/sounds/letter-ok.wav'),
+  lose: new Audio('assets/sounds/lose.wav')
+};
 
+// Configuración inicial
+sounds.tick.loop = true;
+sounds.tick.volume = 0.25;
+
+sounds.warning.volume = 0.6;
+sounds.explosion.volume = 0.9;
+sounds.start.volume = 0.6;
+sounds.letter.volume = 0.5;
+sounds.lose.volume = 0.6;
+
+// Utilidades
+function playSound(s){
+  if(!s) return;
+  s.currentTime = 0;
+  s.play().catch(()=>{});
+}
+
+function stopSound(s){
+  if(!s) return;
+  s.pause();
+  s.currentTime = 0;
+}
 /* ===== DOM ===== */
 const setupEl = document.getElementById('setup');
 const gameEl = document.getElementById('game');
