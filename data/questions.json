@@ -23,5 +23,49 @@
     { "id": "cole", "title": "Objetos del colegio" },
     { "id": "videojuegos", "title": "Videojuegos" },
     { "id": "famosos", "title": "Personajes famosos" }
+    { "id": "colores", "title": "Colores" },
+    { "id": "flores", "title": "Flores" },
+    { "id": "arboles", "title": "Árboles" },
+    { "id": "insectos", "title": "Insectos" },
+    { "id": "aves", "title": "Aves" },
+    { "id": "peces", "title": "Peces" },
+    { "id": "montanas", "title": "Montañas o cordilleras" },
+    { "id": "rios", "title": "Ríos" },
+    { "id": "mares", "title": "Mares u océanos" },
+
+    { "id": "herramientas", "title": "Herramientas" },
+    { "id": "electrodomesticos", "title": "Electrodomésticos" },
+    { "id": "muebles", "title": "Muebles" },
+    { "id": "materiales", "title": "Materiales de construcción" },
+
+    { "id": "marcas_coche", "title": "Marcas de coche" },
+    { "id": "marcas_tecnologia", "title": "Marcas de tecnología" },
+    { "id": "apps", "title": "Aplicaciones móviles" },
+    { "id": "rrss", "title": "Redes Sociales" },
+    { "id": "comida_tipica", "title": "Comidas típicas de un España" },
+    { "id": "postres", "title": "Postres" },
+    { "id": "ingredientes", "title": "Ingredientes de cocina" },
+
+    { "id": "musica_grupos", "title": "Grupos de música" },
+    { "id": "cantantes", "title": "Cantantes" },
+
+    { "id": "pelis_animacion", "title": "Películas de animación" },
+    { "id": "pelis_accion", "title": "Películas de acción" },
+    { "id": "series_infantiles", "title": "Series infantiles" },
+
+    { "id": "juegos_mesa", "title": "Juegos de mesa" },
+    { "id": "juguetes", "title": "Juguetes" },
+
+    { "id": "oficios_antiguos", "title": "Oficios antiguos" },
+    { "id": "superpoderes", "title": "Superpoderes" },
+    { "id": "personajes_ficcion", "title": "Personajes de ficción" },
+
+    { "id": "emociones", "title": "Emociones o sentimientos" },
+    { "id": "adjetivos", "title": "Adjetivos" },
+    { "id": "verbos", "title": "Verbos" },
+
+    { "id": "cosas_playa", "title": "Cosas de la playa" },
+    { "id": "cosas_montana", "title": "Cosas de la montaña" },
+    { "id": "cosas_viaje", "title": "Cosas para llevar de viaje" }
   ]
 }
