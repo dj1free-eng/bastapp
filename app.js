@@ -315,9 +315,9 @@ function startTimer(){
 
     timer -= 1;
 
-    if(timer <= 3 && timer > 0){
-      playSound(sounds.warning);
-    }
+    if(timer === 3){
+  playSound(sounds.warning);
+}
 
     if(timer <= 0){
       timer = 0;
