@@ -30,10 +30,26 @@
     </section>
 
     <section id="game" class="hidden">
-      <div class="card questionCard">
-        <div class="question" id="questionText">Partes del cuerpo humano</div>
-        <div class="sub" id="turnText">Turno de: Jugador 1</div>
+<div class="card questionCard" id="questionCard">
+  <div class="flipCard">
+    <div class="flipInner" id="flipInner">
+
+      <!-- Cara frontal (instrucciones) -->
+      <div class="flipFace flipFront">
+        <div class="frontText" id="frontText">
+          Pulsa el botón central para iniciar el juego
+        </div>
       </div>
+
+      <!-- Cara trasera (pregunta) -->
+      <div class="flipFace flipBack">
+        <div class="question" id="questionText"></div>
+        <div class="sub" id="turnText"></div>
+      </div>
+
+    </div>
+  </div>
+</div>
 
       <div class="bombWrap">
         <div class="bomb" id="bomb">
