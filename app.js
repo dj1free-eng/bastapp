@@ -53,6 +53,18 @@ function stopSound(s){
   s.pause();
   s.currentTime = 0;
 }
+function playLoop(a){
+  if(!a) return;
+  a.loop = true;
+  a.currentTime = 0;
+  a.play().catch(err => console.warn('tick play blocked/error:', err));
+}
+
+function stopLoop(a){
+  if(!a) return;
+  a.pause();
+  a.currentTime = 0;
+}
 function unlockAudioOnce(){
   if (audioUnlocked) return;
   audioUnlocked = true;
@@ -294,8 +306,9 @@ function stopTimer(){
 
 function startTimer(){
   stopTimer();
-  stopSound(sounds.tick);   // <-- esto evita solapes
-  playSound(sounds.tick);
+
+  stopLoop(sounds.tick);
+  playLoop(sounds.tick);
 
   tickHandle = setInterval(() => {
     if(gameState !== 'playing') return;
@@ -322,7 +335,7 @@ function explode(){
 
   stopTimer();
   stopSound(sounds.tick);
-
+stopLoop(sounds.tick);
   playSound(sounds.explosion);
   setTimeout(() => playSound(sounds.lose), 400);
 
@@ -388,7 +401,7 @@ stopSound(sounds.tick);
   renderBomb();
   renderWheel();
   renderChips();
-
+stopLoop(sounds.tick);
   stopTimer();
   setCardFlipped(false);
 }
