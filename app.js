@@ -237,3 +237,13 @@ continueBtn.addEventListener('click', continueSameQuestion);
 
 renderPlayersSetup();
 setScreen('setup');
+centerBtn.addEventListener('click', () => {
+  if (gameState !== 'ready') return;
+
+  gameState = 'playing';
+  renderHeader();
+  renderBomb();
+  renderWheel();
+  renderChips();
+  startTimer();
+});
