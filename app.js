@@ -98,34 +98,40 @@ function renderBomb(){
 
 function renderWheel(){
   lettersLayerEl.innerHTML = '';
-  const N = LETTERS.length;
+
+  const N = LETTERS.length;      // 20
   const center = { x: 50, y: 50 };
-  const radius = 38;
-  const rot = angleDeg + 90;
+  const radius = 32;             // ajustado a tu PNG
+  const startAngleDeg = -90;     // primera tecla arriba
 
-LETTERS.forEach((letter, i) => {
-  const angleDeg = startAngleDeg + (360 * i) / N;     // ángulo en grados (para rotación)
-  const ang = angleDeg * (Math.PI / 180);             // ángulo en radianes (para cos/sin)
+  LETTERS.forEach((letter, i) => {
+    // Posición (en círculo)
+    const angleDeg = startAngleDeg + (360 * i) / N;
+    const ang = angleDeg * (Math.PI / 180);
 
-  const x = center.x + radius * Math.cos(ang);
-  const y = center.y + radius * Math.sin(ang);
+    const x = center.x + radius * Math.cos(ang);
+    const y = center.y + radius * Math.sin(ang);
 
-  const btn = document.createElement('button');
-  btn.className = 'letterBtn';
-  btn.style.left = `${x}%`;
-  btn.style.top = `${y}%`;
+    // Botón
+    const btn = document.createElement('button');
+    btn.className = 'letterBtn';
+    btn.style.left = `${x}%`;
+    btn.style.top = `${y}%`;
 
-  // Rotación por tecla: radial hacia fuera
-  const rot = angleDeg + 90;
-  btn.style.transform = `translate(-50%, -50%) rotate(${rot}deg)`;
+    // Rotación: LEER DESDE FUERA (tecla + letra juntas)
+    const rot = angleDeg - 90;
+    btn.style.setProperty('--rot', `${rot}deg`);
 
-  btn.textContent = letter;
+    btn.textContent = letter;
 
+    // Estado deshabilitado
     const isDisabled = disabled.has(letter);
-    if(isDisabled) btn.classList.add('disabled');
+    if (isDisabled) btn.classList.add('disabled');
     btn.disabled = isDisabled || gameState === 'exploded';
 
+    // Click
     btn.addEventListener('click', () => onLetter(letter));
+
     lettersLayerEl.appendChild(btn);
   });
 }
