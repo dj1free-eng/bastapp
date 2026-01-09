@@ -249,25 +249,17 @@ addPlayerBtn.addEventListener('click', () => {
 playerInputEl.addEventListener('keydown', (e) => {
   if(e.key === 'Enter') addPlayerBtn.click();
 });
-startBtn.addEventListener('click', startNewRound);
-newQuestionBtn.addEventListener('click', startNewRound);
-changePlayersBtn.addEventListener('click', () => {
-  stopTimer();
-  gameState = 'setup';
-  setScreen('setup');
-  renderPlayersSetup();
-});
-continueBtn.addEventListener('click', continueSameQuestion);
-
-renderPlayersSetup();
-setScreen('setup');
 centerBtn.addEventListener('click', () => {
   if (gameState !== 'ready') return;
 
   gameState = 'playing';
+
+  setCardFlipped(true);  // ✅ gira la carta
+
   renderHeader();
   renderBomb();
   renderWheel();
   renderChips();
-  startTimer();
+
+  startTimer();          // ✅ empieza el tiempo
 });
