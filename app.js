@@ -248,7 +248,22 @@ function explode(){
   renderWheel();
   renderChips();
 }
+function resumeSameState(){
+  // Solo tiene sentido si la ronda estaba en curso y se pausó por “explosión” accidental
+  if(gameState !== 'exploded') return;
 
+  // Volvemos a jugar SIN tocar nada del estado actual
+  // (misma pregunta, mismas letras usadas, mismo jugador)
+  gameState = 'playing';
+  timer = TURN_SECONDS;
+
+  renderHeader();
+  renderBomb();
+  renderWheel();
+  renderChips();
+
+  startTimer();
+}
 function nextTurn(){
   currentPlayerIndex = (currentPlayerIndex + 1) % players.length;
   timer = TURN_SECONDS;
