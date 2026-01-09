@@ -88,17 +88,18 @@ function renderHeader(){
   if (gameState === 'exploded') {
     turnTextEl.textContent = '¡BOOOM! Fin de ronda';
   } else if (gameState === 'ready') {
-    turnTextEl.textContent = `Turno de: ${players[currentPlayerIndex]}`;
+    turnTextEl.textContent = `Turno de: ${players[currentPlayerIndex]} — listo`;
   } else {
     turnTextEl.textContent = `Turno de: ${players[currentPlayerIndex]}`;
   }
 
-  // Giro de la carta
-setCardFlipped(gameState === 'playing' || gameState === 'exploded');
-
-  if (frontTextEl){
+  // Texto de la cara frontal (instrucciones)
+  if(frontTextEl){
     frontTextEl.textContent = 'Pulsa el botón central para iniciar el juego';
   }
+
+  // ✅ Esto es lo importante: decide si la carta está girada o no
+  setCardFlipped(gameState === 'playing' || gameState === 'exploded');
 }
 function renderBomb(){
   timeTextEl.textContent = (gameState === 'exploded') ? '💥' : String(timer);
@@ -223,7 +224,8 @@ function startNewRound(){
   renderWheel();
   renderChips();
 
-  stopTimer();           // <-- importantísimo: no contar todavía
+  stopTimer(); // <-- importantísimo: no contar todavía
+setCardFlipped(false);
 }
 function continueSameQuestion(){
   if(!question) question = rand(QUESTIONS);
