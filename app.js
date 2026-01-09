@@ -147,19 +147,29 @@ async function loadQuestions(){
   const fallback = ['Partes del cuerpo humano'];
 
   try{
-    const res = await fetch('./data/questions.json', { cache: 'no-store' });
+    const url = './data/questions.json';
+    const res = await fetch(url, { cache: 'no-store' });
+
+    if(!res.ok){
+      throw new Error(`HTTP ${res.status} al cargar ${url}`);
+    }
+
     const data = await res.json();
 
     const cats = Array.isArray(data.categories) ? data.categories : [];
-    const titles = cats.map(c => c.title).filter(Boolean);
+    const titles = cats.map(c => c && c.title).filter(Boolean);
 
     QUESTIONS = titles.length ? titles : fallback;
     questionsLoaded = true;
 
+    console.log('✅ Preguntas cargadas:', QUESTIONS.length, QUESTIONS);
+
   } catch (err){
-    console.error(err);
+    console.error('❌ Error cargando preguntas:', err);
     QUESTIONS = fallback;
     questionsLoaded = true;
+
+    console.log('⚠️ Usando fallback:', QUESTIONS);
   }
 }
 /* ===== Carta (flip Safari-safe) ===== */
@@ -468,4 +478,12 @@ centerBtn.addEventListener('click', () => {
 /* ===== Init ===== */
 renderPlayersSetup();
 setScreen('setup');
-loadQuestions();
+
+// Bloquea START hasta cargar
+startBtn.disabled = true;
+newQuestionBtn.disabled = true;
+
+loadQuestions().then(() => {
+  startBtn.disabled = false;
+  newQuestionBtn.disabled = false;
+});
