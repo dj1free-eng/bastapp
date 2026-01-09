@@ -353,7 +353,7 @@ changePlayersBtn.addEventListener('click', () => {
   setScreen('setup');
   renderPlayersSetup();
 });
-
+continueBtn.addEventListener('click', resumeSameState);
 // Botón central: iniciar (flip + timer)
 centerBtn.addEventListener('click', () => {
   if (gameState !== 'ready') return;
