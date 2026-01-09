@@ -7,7 +7,7 @@
 ========================= */
 
 const LETTERS = ['A','B','C','D','E','F','G','H','I','J','L','M','N','O','P','R','S','T','U','V'];
-
+let questionsLoaded = false;
 let TURN_SECONDS = 10;            // se puede sobrescribir desde JSON
 let QUESTIONS = [];               // se carga desde JSON
 let gameState = 'setup';          // setup | ready | playing | exploded
