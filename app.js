@@ -94,12 +94,7 @@ function renderHeader(){
   }
 
   // Giro de la carta
-  if (flipInner){
-    flipInner.classList.toggle(
-      'isFlipped',
-      gameState === 'playing' || gameState === 'exploded'
-    );
-  }
+setCardFlipped(gameState === 'playing' || gameState === 'exploded');
 
   if (frontTextEl){
     frontTextEl.textContent = 'Pulsa el botón central para iniciar el juego';
@@ -155,7 +150,21 @@ function renderWheel(){
     lettersLayerEl.appendChild(btn);
   });
 }
+function setCardFlipped(flipped){
+  if(!flipInner) return;
 
+  if(!flipped){
+    flipInner.classList.remove('isFlipped');
+    return;
+  }
+
+  // Safari iOS: forzar que la transición se dispare
+  flipInner.classList.remove('isFlipped');
+  void flipInner.offsetWidth; // reflow
+  requestAnimationFrame(() => {
+    flipInner.classList.add('isFlipped');
+  });
+}
 function stopTimer(){
   if(tickHandle) clearInterval(tickHandle);
   tickHandle = null;
