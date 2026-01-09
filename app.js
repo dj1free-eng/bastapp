@@ -145,15 +145,13 @@ async function loadQuestions(){
   const fallback = ['Partes del cuerpo humano'];
 
   try{
-    const url = './data/questions.json';
+    // URL robusta (funciona en GitHub Pages y subcarpetas)
+    const url = new URL('data/questions.json', window.location.href).toString();
+
     const res = await fetch(url, { cache: 'no-store' });
     if(!res.ok) throw new Error(`HTTP ${res.status} al cargar ${url}`);
 
     const data = await res.json();
-
-    if (typeof data.timeLimitSeconds === 'number' && data.timeLimitSeconds > 0) {
-      TURN_SECONDS = data.timeLimitSeconds;
-    }
 
     const cats = Array.isArray(data.categories) ? data.categories : [];
     const titles = cats.map(c => c && c.title).filter(Boolean);
@@ -161,18 +159,17 @@ async function loadQuestions(){
     QUESTIONS = titles.length ? titles : fallback;
     questionsLoaded = true;
 
-    console.log('✅ Preguntas cargadas:', QUESTIONS.length);
+    // 👇 DIAGNÓSTICO EN PANTALLA
+    if (turnTextEl) turnTextEl.textContent = `✅ Preguntas cargadas: ${QUESTIONS.length}`;
 
   } catch (err){
-    console.error('❌ Error cargando preguntas:', err);
     QUESTIONS = fallback;
     questionsLoaded = true;
+
+    // 👇 DIAGNÓSTICO EN PANTALLA
+    if (turnTextEl) turnTextEl.textContent = `❌ No cargó questions.json → ${String(err.message || err)}`;
   }
-
-  // sincroniza timer con TURN_SECONDS
-  timer = TURN_SECONDS;
 }
-
 /* ===== Carta (flip Safari-safe) ===== */
 function setCardFlipped(flipped){
   if(!flipInner) return;
