@@ -235,3 +235,23 @@ input:focus{border-color:#a78bfa;}
 .frontText{
   line-height:1.2;
 }
+/* --- Formato texto tarjeta superior (pregunta/resultado) --- */
+#questionText{
+  display:block;
+  margin: 0;
+  line-height: 1.15;
+  font-weight: 900;
+}
+
+#turnText{
+  display:block;
+  margin-top: 10px;
+  line-height: 1.1;
+  font-weight: 700;
+  opacity: .7;
+}
+
+/* Si tu .flipBack centra todo, esto ayuda a que quede bonito */
+.flipBack{
+  flex-direction: column;
+}
