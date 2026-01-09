@@ -144,35 +144,24 @@ function escapeHtml(str){
 
 /* ===== JSON preguntas ===== */
 async function loadQuestions(){
-  // Fallback mínimo si no hay JSON / falla carga
   const fallback = ['Partes del cuerpo humano'];
 
   try{
     const res = await fetch('./data/questions.json', { cache: 'no-store' });
-    if(!res.ok) throw new Error('No se pudo cargar ./data/questions.json');
-
     const data = await res.json();
 
-    // Tiempo configurable desde JSON
-    if (typeof data.timeLimitSeconds === 'number' && data.timeLimitSeconds > 0) {
-      TURN_SECONDS = data.timeLimitSeconds;
-    }
-
     const cats = Array.isArray(data.categories) ? data.categories : [];
-    const titles = cats.map(c => c && c.title).filter(Boolean);
+    const titles = cats.map(c => c.title).filter(Boolean);
 
     QUESTIONS = titles.length ? titles : fallback;
+    questionsLoaded = true;
 
   } catch (err){
     console.error(err);
     QUESTIONS = fallback;
+    questionsLoaded = true;
   }
-
-  // Asegura consistencia del timer cuando cambie TURN_SECONDS
-  timer = TURN_SECONDS;
 }
-QUESTIONS = titles.length ? titles : fallback;
-questionsLoaded = true;
 /* ===== Carta (flip Safari-safe) ===== */
 function setCardFlipped(flipped){
   if(!flipInner) return;
@@ -386,6 +375,10 @@ function onLetter(letter){
 }
 
 function startNewRound(){
+   if(!questionsLoaded){
+  console.warn('Preguntas aún no cargadas');
+  return;
+}
   if(!QUESTIONS || QUESTIONS.length === 0){
     QUESTIONS = ['Partes del cuerpo humano'];
   }
