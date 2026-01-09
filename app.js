@@ -171,7 +171,8 @@ async function loadQuestions(){
   // Asegura consistencia del timer cuando cambie TURN_SECONDS
   timer = TURN_SECONDS;
 }
-
+QUESTIONS = titles.length ? titles : fallback;
+questionsLoaded = true;
 /* ===== Carta (flip Safari-safe) ===== */
 function setCardFlipped(flipped){
   if(!flipInner) return;
