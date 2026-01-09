@@ -100,8 +100,8 @@ input:focus{border-color:#a78bfa;}
 .lettersLayer{ position:absolute; inset:0; }
 .letterBtn{
   position:absolute;
-  width:38px;
-  height:52px;
+  width:44px;
+  height:60px;
   border-radius:12px;
   border:0;
 
