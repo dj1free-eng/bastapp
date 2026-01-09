@@ -142,14 +142,19 @@ function renderChips(){
 }
 
 function renderHeader(){
-  questionTextEl.textContent = question;
-
+  // TEXTO PRINCIPAL
   if (gameState === 'exploded') {
-    turnTextEl.textContent = '¡BOOOM! Fin de ronda';
-  } else if (gameState === 'ready') {
-    turnTextEl.textContent = `Turno de: ${players[currentPlayerIndex]} — listo`;
+    const loser = players[currentPlayerIndex];
+    questionTextEl.textContent = `💥 Ha perdido ${loser}`;
+    turnTextEl.textContent = 'Fin de la ronda';
   } else {
-    turnTextEl.textContent = `Turno de: ${players[currentPlayerIndex]}`;
+    questionTextEl.textContent = question;
+
+    if (gameState === 'ready') {
+      turnTextEl.textContent = `Turno de: ${players[currentPlayerIndex]} — listo`;
+    } else {
+      turnTextEl.textContent = `Turno de: ${players[currentPlayerIndex]}`;
+    }
   }
 
   // Texto frontal (instrucciones)
@@ -157,7 +162,7 @@ function renderHeader(){
     frontTextEl.textContent = 'Pulsa el botón central para iniciar el juego';
   }
 
-  // Decide si carta está girada
+  // Giro de la carta
   setCardFlipped(gameState === 'playing' || gameState === 'exploded');
 }
 
