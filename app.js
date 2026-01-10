@@ -102,7 +102,7 @@ function unlockAudioOnce(){
 /* ===== DOM ===== */
 const setupEl = document.getElementById('setup');
 const gameEl = document.getElementById('game');
-
+const setupStatusEl = document.getElementById('setupStatus');
 const centerBtn = document.getElementById('centerBtn');
 
 const playersListEl = document.getElementById('playersList');
