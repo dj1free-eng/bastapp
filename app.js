@@ -491,3 +491,29 @@ if(introVideo){
 if(skipIntro){
   skipIntro.addEventListener('click', closeIntro);
 }
+const fullscreenBtn = document.getElementById('fullscreenBtn');
+const gameRoot = document.documentElement; // o document.getElementById('game')
+
+function toggleFullscreen(){
+  if (!document.fullscreenElement &&
+      !document.webkitFullscreenElement) {
+
+    if (gameRoot.requestFullscreen) {
+      gameRoot.requestFullscreen();
+    } else if (gameRoot.webkitRequestFullscreen) {
+      gameRoot.webkitRequestFullscreen();
+    }
+
+  } else {
+
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+    } else if (document.webkitExitFullscreen) {
+      document.webkitExitFullscreen();
+    }
+  }
+}
+
+if(fullscreenBtn){
+  fullscreenBtn.addEventListener('click', toggleFullscreen);
+}
