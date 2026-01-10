@@ -22,7 +22,8 @@
     { "id": "coche", "title": "Cosas de un coche" },
     { "id": "cole", "title": "Objetos del colegio" },
     { "id": "videojuegos", "title": "Videojuegos" },
-    { "id": "famosos", "title": "Personajes famosos" }
+    { "id": "famosos", "title": "Personajes famosos" },
+
     { "id": "colores", "title": "Colores" },
     { "id": "flores", "title": "Flores" },
     { "id": "arboles", "title": "Árboles" },
@@ -42,7 +43,8 @@
     { "id": "marcas_tecnologia", "title": "Marcas de tecnología" },
     { "id": "apps", "title": "Aplicaciones móviles" },
     { "id": "rrss", "title": "Redes Sociales" },
-    { "id": "comida_tipica", "title": "Comidas típicas de un España" },
+
+    { "id": "comida_tipica", "title": "Comidas típicas de España" },
     { "id": "postres", "title": "Postres" },
     { "id": "ingredientes", "title": "Ingredientes de cocina" },
 
