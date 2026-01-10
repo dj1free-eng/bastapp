@@ -39,10 +39,10 @@ const sounds = {
 sounds.tick.loop = true;
 sounds.tick.volume = 0.25;
 
-sounds.warning.volume = 0.6;
-sounds.explosion.volume = 0.9;
-sounds.start.volume = 0.6;
-sounds.letter.volume = 0.5;
+sounds.warning.volume = 0.5;
+sounds.explosion.volume = 1.0;
+sounds.start.volume = 0.8;
+sounds.letter.volume = 0.9;
 sounds.lose.volume = 0.6;
 
 function playSound(a){
