@@ -260,3 +260,30 @@ input:focus{border-color:#a78bfa;}
 .flipBack{
   flex-direction: column;
 }
+.introScreen {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.introScreen video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.skipIntro {
+  position: absolute;
+  bottom: 24px;
+  right: 24px;
+  padding: 10px 16px;
+  border-radius: 999px;
+  border: none;
+  font-weight: 700;
+  background: rgba(255,255,255,0.85);
+  color: #111;
+}
