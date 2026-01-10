@@ -470,3 +470,24 @@ loadQuestions().then(() => {
   startBtn.disabled = false;
   newQuestionBtn.disabled = false;
 });
+const introScreen = document.getElementById('introScreen');
+const introVideo = document.getElementById('introVideo');
+const skipIntro = document.getElementById('skipIntro');
+
+function closeIntro(){
+  introVideo.pause();
+  introScreen.style.display = 'none';
+}
+
+if(introVideo){
+  // iOS necesita interacción previa: el primer toque desbloquea
+  document.addEventListener('click', () => {
+    introVideo.play().catch(()=>{});
+  }, { once: true });
+
+  introVideo.addEventListener('ended', closeIntro);
+}
+
+if(skipIntro){
+  skipIntro.addEventListener('click', closeIntro);
+}
